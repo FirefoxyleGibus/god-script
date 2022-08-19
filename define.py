@@ -28,7 +28,22 @@ def func2(par):
 	else:
 		raise SyntaxError("add takes less than 3 arguments")
 
+def func3(par):
+	if (type(par) == list):
+		out = ""
+		for i in par:
+			if (type(i) != str):
+				out += str(i)
+			else:
+				if (i[0] != '"'):
+					raise SyntaxError("show takes value or variable")
+				out += i.replace('"',"")
+		return '"' + input(out) + '"'
+	else:
+		raise SyntaxError("Unexpected error")
+
 funcDefiner = {
 	"show":func1,
 	"add":func2,
+	"input":func3
 }

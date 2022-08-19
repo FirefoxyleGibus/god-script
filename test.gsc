@@ -1,2 +1,1 @@
-show("Test ",4);
-show(newLine,"a");
+show(input("Enter stuff >>> "));
