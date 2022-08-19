@@ -108,6 +108,13 @@ class interpreter:
 							self.instructions = replaceVar(self.instructions,self.instructions[i+1][0])
 						else:
 							raise SyntaxError("variable can't be numbers")
+					elif (type(self.instructions[i+1][1] == str)):
+						A = self.executeInst(self.instructions[i+1][1],self.instructions[i+1][2])
+						if (type(self.instructions[i+1][0]) == str):
+							variable[self.instructions[i+1][0]] = A
+							self.instructions = replaceVar(self.instructions,self.instructions[i+1][0])
+						else:
+							raise SyntaxError("variable can't be numbers")
 					else:
 						raise SyntaxError("store takes 2 parameters")
 				else:

@@ -42,8 +42,25 @@ def func3(par):
 	else:
 		raise SyntaxError("Unexpected error")
 
+def func4(par):
+	if (type(par) == list and len(par) == 1):
+		return '"' + str(par[0]) + '"'
+	else:
+		raise SyntaxError("toString takes only 1 argument")
+
+def func5(par):
+	if (type(par) == list and len(par) == 1):
+		try:
+			return int(par[0].replace('"',""))
+		except:
+			raise SyntaxError("Invalid input")
+	else:
+		raise SyntaxError("toString takes only 1 argument")
+
 funcDefiner = {
 	"show":func1,
 	"add":func2,
-	"input":func3
+	"input":func3,
+	"toString":func4,
+	"toInt":func5
 }
