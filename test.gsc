@@ -1,1 +1,2 @@
-show(add(4,4));
+show("Test ",4);
+show(newLine,"a");

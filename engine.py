@@ -17,7 +17,7 @@ class tokenizer:
 				self.lines.append(cur)
 				cur = ""
 		for i in range(len(self.lines)):
-			self.instructions = self.doOneCut(self.lines[i])
+			self.instructions += self.doOneCut(self.lines[i])
 
 	def doOneCut(self,inp):
 		cur = ""
@@ -100,13 +100,12 @@ class interpreter:
 		for i in range(len(self.instructions)):
 			if (type(self.instructions[i]) == str):
 				if (self.instructions[i] in funcDefiner.keys()):
-					return self.executeInst(self.instructions[i],self.instructions[i+1])
+					A = self.executeInst(self.instructions[i],self.instructions[i+1])
 				elif (self.instructions[i] == "store"):
 					if (len(self.instructions[i+1]) == 2):
 						if (type(self.instructions[i+1][0]) == str):
 							variable[self.instructions[i+1][0]] = self.instructions[i+1][1]
 							self.instructions = replaceVar(self.instructions,self.instructions[i+1][0])
-							return None
 						else:
 							raise SyntaxError("variable can't be numbers")
 					else:
@@ -147,4 +146,4 @@ def replaceVar(inp,var):
 				B.append(i)
 	return B
 
-variable = {"newLine":"\n"}
+variable = {"newLine":'"\n"'}
