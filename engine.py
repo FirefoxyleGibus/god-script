@@ -1,4 +1,8 @@
 from define import *
+from register import *
+from debugger import *
+
+_debugger = Debugger()
 
 class tokenizer:
 	code = ""
@@ -6,9 +10,12 @@ class tokenizer:
 	instructions = []
 
 	def __init__(self,file):
+		_debugger.begin_section("TOKENISER INIT")
+		_debugger.log("Opening ", file)
 		with open(file,"r") as f:
 			for i in f.readlines():
 				self.code += i.replace("\n","").replace("\t","")
+		_debugger.log("Read file")
 		cur = ""
 		for i in self.code:
 			if (i != ";"):
@@ -16,8 +23,11 @@ class tokenizer:
 			else:
 				self.lines.append(cur)
 				cur = ""
+		_debugger.log("Splitted into instructions")
 		for i in range(len(self.lines)):
 			self.instructions += self.doOneCut(self.lines[i])
+		_debugger.log("Cutted")
+		_debugger.end_section()
 
 	def doOneCut(self,inp):
 		cur = ""
@@ -45,9 +55,11 @@ class tokenizer:
 		return out
 
 	def showCode(self):
-		print(self.code)
-		print(self.lines)
-		print(self.instructions)
+		_debugger.begin_section("TOKENISER OUT")
+		_debugger.log(self.code)
+		_debugger.log(self.lines)
+		_debugger.log(self.instructions)
+		_debugger.end_section()
 
 	def sendData(self):
 		return self.instructions
@@ -95,30 +107,52 @@ class interpreter:
 	instructions = []
 
 	def exec(self,instructions):
-		self.instructions = replaceVar(instructions,"newLine")
+		_debugger.begin_section("INTERPRETER")
+		self.register     = Register()
+
+		# Replacing newLine with \n
+		self.register.decl_var("newLine", "\n")
+		_debugger.begin_section(f"REPLACE newLine")
+		self.instructions = self.replaceVar(instructions,"newLine")
+		_debugger.end_section()
 
 		for i in range(len(self.instructions)):
 			if (type(self.instructions[i]) == str):
 				if (self.instructions[i] in funcDefiner.keys()):
 					A = self.executeInst(self.instructions[i],self.instructions[i+1])
+				
 				elif (self.instructions[i] == "store"):
 					if (len(self.instructions[i+1]) == 2):
 						if (type(self.instructions[i+1][0]) == str):
-							variable[self.instructions[i+1][0]] = self.instructions[i+1][1]
-							self.instructions = replaceVar(self.instructions,self.instructions[i+1][0])
+							_debugger.log(f"Storing {self.instructions[i+1][1]} at {self.instructions[i+1][0]}")
+							self.register.store_var(self.instructions[i+1][0], self.instructions[i+1][1])
+							_debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
+							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
+							_debugger.end_section()
 						else:
+							_debugger.log_error("store: variable can't be numbers")
 							raise SyntaxError("variable can't be numbers")
+
 					elif (type(self.instructions[i+1][1] == str)):
 						A = self.executeInst(self.instructions[i+1][1],self.instructions[i+1][2])
 						if (type(self.instructions[i+1][0]) == str):
-							variable[self.instructions[i+1][0]] = A
-							self.instructions = replaceVar(self.instructions,self.instructions[i+1][0])
+							_debugger.log(f"Storing {A} at {self.instructions[i+1][0]}")
+							self.register.store_var(self.instructions[i+1][0], A)
+							_debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
+							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
+							_debugger.end_section()
 						else:
+							_debugger.log_error("store: variable can't be numbers")
 							raise SyntaxError("variable can't be numbers")
+						
 					else:
+						_debugger.log_error(f"store: takes 2 paramaters, {len(self.instructions[i+1])} where given")
 						raise SyntaxError("store takes 2 parameters")
 				else:
+					_debugger.log_error("nop, fck u for that shit : ", self.instructions[i])
 					print("nop")
+		_debugger.end_section()
+		_debugger.close()
 
 	def executeInst(self,inst,par):
 		newPar = []
@@ -133,24 +167,26 @@ class interpreter:
 						newPar.append(self.executeInst(par[i],par[i+1]))
 						flag = True
 					else:
-						raise SyntaxError("fonctions or variable '" + par[i] + "' doesn't exists")
+						_debugger.log_error("Execute Instance: ", "function or variable '" + repr(par[i]) + "' doesn't exists")
+						raise SyntaxError("function or variable '" + repr(par[i]) + "' doesn't exists")
 				else:
 					newPar.append(par[i])
 			else:
 				newPar.append(par[i])
+		_debugger.log_func_call(inst, newPar)
 		return funcDefiner[inst](newPar)
 
 
-def replaceVar(inp,var):
-	B = []
-	for i in inp:
-		if (type(i) == list):
-			[B.append(replaceVar(i,var))]
-		else:
-			if (i == var):
-				B.append(variable[var])
+	def replaceVar(self, inp, var):
+		"""Replace variable name by variable value"""
+		_debugger.log(f"Replacing {var} in {repr(inp)} by {repr(self.register.get_var(var))}")
+		B = []
+		for i in inp:
+			if (type(i) == list):
+				[B.append(self.replaceVar(i,var))]
 			else:
-				B.append(i)
-	return B
-
-variable = {"newLine":'"\n"'}
+				if (i == var):
+					B.append(self.register.get_var(var))
+				else:
+					B.append(i)
+		return B
