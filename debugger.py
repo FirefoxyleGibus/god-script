@@ -30,7 +30,7 @@ class Debugger:
         self.filename.write(self.indent() + "[ERROR] " + s + "\n")
     
     def log_func_call(self, funcname, parameters_list):
-        self.filename.write(self.indent() + f"Called {funcname} with {', '.join([str(p) for p in parameters_list])}\n")
+        self.filename.write(self.indent() + f"Called {funcname} with {', '.join([repr(p) for p in parameters_list])}\n")
 
     def close(self):
         self.filename.close()
