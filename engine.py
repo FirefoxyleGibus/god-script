@@ -111,7 +111,7 @@ class interpreter:
 		self.register     = Register()
 
 		# Replacing newLine with \n
-		self.register.decl_var("newLine", "\n")
+		self.register.decl_var("newLine", '"\n"')
 		_debugger.begin_section(f"REPLACE newLine")
 		self.instructions = self.replaceVar(instructions,"newLine")
 		_debugger.end_section()
@@ -120,7 +120,7 @@ class interpreter:
 			if (type(self.instructions[i]) == str):
 				if (self.instructions[i] in funcDefiner.keys()):
 					A = self.executeInst(self.instructions[i],self.instructions[i+1])
-				
+
 				elif (self.instructions[i] == "store"):
 					if (len(self.instructions[i+1]) == 2):
 						if (type(self.instructions[i+1][0]) == str):
@@ -144,7 +144,7 @@ class interpreter:
 						else:
 							_debugger.log_error("store: variable can't be numbers")
 							raise SyntaxError("variable can't be numbers")
-						
+
 					else:
 						_debugger.log_error(f"store: takes 2 paramaters, {len(self.instructions[i+1])} where given")
 						raise SyntaxError("store takes 2 parameters")
