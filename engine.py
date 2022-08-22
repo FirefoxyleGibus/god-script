@@ -16,6 +16,7 @@ class tokenizer:
 			strFlag = False
 			comFlag = False
 			oneComFlag = False
+			privFlag = False
 			for character in f.read().decode("UTF-8"):
 				if (strFlag):
 					if (character == "\r"):
@@ -26,13 +27,19 @@ class tokenizer:
 					else:
 						self.code += character
 				elif (comFlag):
-					if (character == "#"):
+					if (privFlag and character == "#"):
 						comFlag = False
+						oneComFlag = False
+						privFlag = False
+					elif (character == "#"):
+						privFlag = True
 					else:
 						continue
 				elif (oneComFlag):
 					if (character == "\r"):
 						oneComFlag = False
+					elif (character == "#"):
+						comFlag = True
 					else:
 						continue
 				else:
@@ -40,8 +47,6 @@ class tokenizer:
 						self.code += character
 						strFlag = True
 					elif (character == "#"):
-						comFlag = True
-					elif (character == "$"):
 						oneComFlag = True
 					elif (character == "\r" or character == "\n" or character == "\t" or character == " "):
 						continue
