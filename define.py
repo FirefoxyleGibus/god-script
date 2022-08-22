@@ -7,7 +7,7 @@ def func1(par):
 			else:
 				if (i[0] != '"'):
 					raise SyntaxError("show takes value or variable")
-				out += i.replace('"',"")
+				out += bytes(i.replace('"',""), "utf-8").decode("unicode_escape")
 		print(out,end="")
 		return None
 	else:
@@ -32,7 +32,7 @@ def func3(par):
 				out += str(i)
 			else:
 				if (i[0] != '"'):
-					raise SyntaxError("show takes value or variable")
+					raise SyntaxError("input takes value or variable")
 				out += i.replace('"',"")
 		return '"' + input(out) + '"'
 	else:
