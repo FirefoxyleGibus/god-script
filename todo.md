@@ -1,6 +1,6 @@
 # TODOLIST
 
-- [ ] add comments
+- [x] add comments
 - [ ] for loops
 - [ ] while loops
 - [ ] if expression parsing

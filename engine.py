@@ -12,9 +12,47 @@ class tokenizer:
 	def __init__(self,file):
 		_debugger.begin_section("TOKENISER INIT")
 		_debugger.log("Opening ", file)
-		with open(file,"r") as f:
-			for i in f.readlines():
-				self.code += i.replace("\n","").replace("\t","")
+		with open(file,"rb") as f:
+			strFlag = False
+			comFlag = False
+			oneComFlag = False
+			privFlag = False
+			for character in f.read().decode("UTF-8"):
+				if (strFlag):
+					if (character == "\r"):
+						raise SyntaxError("str doesn't work on multiline, use "+ repr('\n') +" instead")
+					elif (character == '"'):
+						self.code += character
+						strFlag = False
+					else:
+						self.code += character
+				elif (comFlag):
+					if (privFlag and character == "#"):
+						comFlag = False
+						oneComFlag = False
+						privFlag = False
+					elif (character == "#"):
+						privFlag = True
+					else:
+						continue
+				elif (oneComFlag):
+					if (character == "\r"):
+						oneComFlag = False
+					elif (character == "#"):
+						comFlag = True
+					else:
+						continue
+				else:
+					if (character == '"'):
+						self.code += character
+						strFlag = True
+					elif (character == "#"):
+						oneComFlag = True
+					elif (character == "\r" or character == "\n" or character == "\t" or character == " "):
+						continue
+					else:
+						self.code += character
+			self.code = bytes(self.code, "utf-8").decode("unicode_escape")
 		_debugger.log("Read file")
 		cur = ""
 		for i in self.code:

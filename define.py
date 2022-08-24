@@ -32,7 +32,7 @@ def func3(par):
 				out += str(i)
 			else:
 				if (i[0] != '"'):
-					raise SyntaxError("show takes value or variable")
+					raise SyntaxError("input takes value or variable")
 				out += i.replace('"',"")
 		return '"' + input(out) + '"'
 	else:
