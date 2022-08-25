@@ -3,6 +3,8 @@ from engine.register import *
 from engine.debugger import *
 from engine.errors import *
 
+__register = Register()
+
 class tokenizer:
 	code = ""
 	lines = []
@@ -186,27 +188,6 @@ class interpreter:
 					raise InvalidSyntaxError(0,"interpreter","func or variables doesn't exists")
 		Debugger.end_section()
 		Debugger.close()
-
-	def executeInst(self,inst,par):
-		newPar = []
-		flag = False
-		for i in range(len(par)):
-			if (flag):
-				flag = False
-				continue
-			elif (type(par[i]) == str):
-				if (par[i][0] != '"'):
-					if (par[i] in funcDefiner.keys()):
-						newPar.append(self.executeInst(par[i],par[i+1]))
-						flag = True
-					else:
-						raise InvalidSyntaxError(0,"interpreter","func or variables doesn't exists")
-				else:
-					newPar.append(par[i])
-			else:
-				newPar.append(par[i])
-		Debugger.log_func_call(inst, newPar)
-		return funcDefiner[inst](newPar)
 
 
 	def replaceVar(self, inp, var):
