@@ -1,4 +1,4 @@
-from engine.instructions import Instruction, Filepos
+from engine.instructions.instruction import *
 from engine.define import *
 from engine.engine import *
 
