@@ -64,17 +64,18 @@ class tokenizer:
 				self.lines.append(cur)
 				cur = ""
 		Debugger.log("Splitted into instructions")
+		print(self.lines)
 		for i in range(len(self.lines)):
-			self.instructions += self.doOneCut(self.lines[i],i+1)
+			self.instructions += self.doOneCut(self.lines[i],i+1,0)
 		Debugger.log("Cutted")
-		Debugger.log("instr :", str(self.instructions))
+		Debugger.log("instr : [ " + ",".join(str(p) for p in self.instructions) + " ]")
 		Debugger.end_section()
 
-	def doOneCut(self,inp,line):
+	def doOneCut(self,inp,line,deep):
 		cur = ""
 		out = []
 		par = []
-		inst = ""
+		instr = ""
 		flag = False
 		count = 0
 		for j in inp:
@@ -83,20 +84,23 @@ class tokenizer:
 			elif (j == ")"):
 				count -= 1
 			if (j == "(" and not flag and count == 1):
-				inst = cur
+				instr = cur
 				cur = ""
 				flag = True
+			elif (j == "," and flag and count == 1):
+				par += (self.doOneCut(cur,line,deep+1))
+				cur = ""
 			elif (j == ")" and flag and count == 0):
-				par += (self.doOneCut(cur,line))
+				par += (self.doOneCut(cur,line,deep+1))
 				flag = False
 				cur = ""
 			else:
 				cur += j
 		else:
 			if (cur != ""):
-				return cur
-		if (inst != ""):
-			out.append(FuncInstruction(inst,par,Filepos(1,line)))
+				return [Variable.parse_to_type(cur)]
+		if (instr != ""):
+			out.append(FuncInstruction(instr,par,Filepos(line,deep)))
 			return out
 		else:
 			return par
@@ -118,7 +122,7 @@ class parser:
 		Debugger.begin_section("PARSING")
 		self.instructions = instructions
 		A = self.parseOne(self.instructions)
-		Debugger.log("instr :",str(A))
+		Debugger.log("instr : [ " + ",".join(str(p) for p in self.instructions) + " ]")
 		Debugger.end_section()
 		return A
 
@@ -135,11 +139,7 @@ class parser:
 					elif (j == " " and not flag):
 						pass
 					elif (j == "," and not flag):
-						try:
-							newStr = int(newStr)
-						except:
-							pass
-						out.append(newStr)
+						out.append(Variable.parse_to_type(newStr))
 						newStr = ""
 					elif (flag):
 						newStr += j

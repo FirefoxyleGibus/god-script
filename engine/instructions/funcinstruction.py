@@ -12,10 +12,13 @@ class FuncInstruction(Instruction):   # all functions in std
 				self.params.append(Variable.parse_to_type(i))
 			else:
 				self.params.append(i)
-		self.strParams = "[" + ",".join([str(p) for p in self.params]) + "]"
+		self.strParams = "[" + ",".join([repr(p) for p in self.params]) + "]"
 
 	def __str__(self):
 		return f'{self.instr} with {self.strParams} in {self.filepos}'
+
+	def __repr__(self):
+		return str(self)
 
 	def exec(self):
 		Debugger.log_instruction(self,"Trying execution with parameters",self.strParams)

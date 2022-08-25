@@ -1,3 +1,5 @@
-# Petit code de test pour le nouveau tokenizer
+# Tiny code to test the new method
 
-show(add(45));
+show("Hello ","World\n");
+show("9+4 = ",add(9,4),"\n");
+bite(4); ## I know it doesn't exists, it's to test errors ##
