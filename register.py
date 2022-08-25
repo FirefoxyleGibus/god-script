@@ -29,6 +29,9 @@ class Variable:
         if type(value) == float:
             return GSC_TYPES["FLOAT"]
         if type(value) == str:
+            # avoid reconversion
+            if value[0] == '"' and value[-1] == '"':
+                return value
             # try to convert
             if value == "false"\
             or value == "true": return GSC_TYPES["BOOL"]
@@ -45,6 +48,9 @@ class Variable:
         if type(value) == float:
             return float(value)
         if type(value) == str:
+            # avoid reconversion
+            if value[0] == '"' and value[-1] == '"':
+                return str(value)
             # try to convert
             if value == "false": return 0
             if value == "true":  return 1
