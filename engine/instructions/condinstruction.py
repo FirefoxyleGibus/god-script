@@ -1,7 +1,7 @@
-from engine.instructions.instruction import *
+from engine.instructions import Instruction, Filepos
 
 class CondInstruction(Instruction):   # parsing conditionnal stuff
-	def __init__(self, instruction_str, filepos):
+	def __init__(self, instruction_str, filepos=Filepos(0, 0)):
 		Instruction.__init__(self, instruction_str, filepos)
 
 		parts    = []
