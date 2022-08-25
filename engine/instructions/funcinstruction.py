@@ -24,7 +24,7 @@ def executeInst(inst):
 	for i in range(len(inst.params)):
 		if (type(inst.params[i]) == FuncInstruction):
 			if (inst.params[i] in funcDefiner.keys()):
-				newPar.append(self.executeInst(inst.params[i]))
+				newPar.append(executeInst(inst.params[i]))
 			else:
 				raise MissingFuncError(inst.params[i].filepos.line,inst.params[i].instr)
 		elif (type(inst.params[i]) == str):
