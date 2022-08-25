@@ -1,3 +1,4 @@
+import os
 
 class Debugger:
     def init(indent="\t"):
@@ -6,10 +7,12 @@ class Debugger:
         Args:
             indent (str, optional): indentation character for sections. Defaults to "\t".
         """
+        if not (os.path.isdir(r"./__gsccache__")):
+            os.mkdir(r"./__gsccache__")
         Debugger.file = open("__gsccache__/stacktrace.txt", "w")
         Debugger.current_sections_stack = []
         Debugger.indent_str = indent
-    
+
     def _indent():
         """Return the Indentation based on how many sections are opened
 
@@ -25,7 +28,7 @@ class Debugger:
         """
         Debugger.file.write(Debugger._indent() + f"[ BEGIN SECTION {section_name} ]\n")
         Debugger.current_sections_stack.append(section_name)
-    
+
     def end_section():
         """End the last opened section
 
@@ -43,7 +46,7 @@ class Debugger:
         """
         s = str(sep).join(msg)
         Debugger.file.write(Debugger._indent() + s + "\n")
-    
+
     def log_error(*msg, sep=" "):
         """Log error to the debug file
 
@@ -52,7 +55,7 @@ class Debugger:
         """
         s = str(sep).join(msg)
         Debugger.file.write(Debugger._indent() + "[ERROR] " + s + "\n")
-    
+
     def log_func_call(funcname, parameters_list):
         """Log the call to the <funcname> with their parameters
 
