@@ -1,12 +1,15 @@
-from engine.instructions.condinstruction import *
-from engine.instructions.funcinstruction import *
+
 
 from engine.register import *
+from engine.errors import *
 
 class Filepos:
 	def __init__(self, line, char):
 		self.line = line
 		self.char = char
+
+	def __str__(self):
+		return f'pos {self.line}:{self.char}'
 
 class Instruction:       # general instructions
 	def __init__(self, instruction_str, filepos=Filepos(0, 0)):
@@ -24,8 +27,10 @@ class Instruction:       # general instructions
 				continue
 			if c in '"':
 				flag = not flag
+				cur += c
 				continue
 			cur += c
+		params.append(Variable.parse_to_type(cur))
 		return params
 
 	def exec(self):

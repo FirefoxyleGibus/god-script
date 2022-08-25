@@ -1,8 +1,8 @@
-from engine.errors import MissingVariableError 
+from engine.errors import MissingVariableError
 
 GSC_TYPES = {
     "UNKNOWN": -1,
-    
+
     "INT":   0,
     "BOOL":  1,
     "STR":   2,
@@ -14,11 +14,11 @@ class Variable:
         self.name = name
         self.type = Variable.get_type(val)
         self.val = Variable.parse_to_type(val)
-    
+
     def set_value(self, value):
         self.val = Variable.parse_to_type(value)
         self.type = self.type = Variable.get_type(value)
-    
+
     def get_value(self):
         return self.val
 
@@ -40,7 +40,7 @@ class Variable:
 
             return GSC_TYPES["STR"]
         return GSC_TYPES["UNKNOWN"]
-    
+
     def parse_to_type(value):
         if type(value) == int:
             return int(value)
@@ -49,7 +49,7 @@ class Variable:
         if type(value) == str:
             # avoid reconversion
             if value[0] == '"' and value[-1] == '"':
-                return str(value)
+                return value
             # try to convert
             if value == "false": return 0
             if value == "true":  return 1
@@ -57,7 +57,7 @@ class Variable:
             try: return int(value);
             except: pass
         return value
-    
+
     def __hash__(self):
         return self.name.__hash__();
 
@@ -73,15 +73,15 @@ class Register:
 
     def decl_var(self, name, value):
         self.registeredVariables[name] = Variable(name, value)
-    
+
     def set_var(self, name, newValue):
         if not name in self.registeredVariables.keys():
             raise SyntaxError("Unknown variable: " + str(name))
-        
+
         self.registeredVariables[name].set_value(newValue)
-    
+
     def get_var(self, name):
         if not name in self.registeredVariables.keys():
             raise MissingVariableError(str(name))
-        
+
         return self.registeredVariables[name].get_value()

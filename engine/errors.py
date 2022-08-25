@@ -26,7 +26,16 @@ class MissingVariableError(DebuggerException):
 	def __init__(self, line, variable_name):
 		self.line = line
 		self.variable_name = variable_name
-	
+
 	def __str__(self):
 		Debugger.log_error(f'Missing variable "{self.variable_name}" on line {self.line}')
 		return f'{self.variable_name}\nMissing variable on line {self.line}'
+
+class MissingFuncError(DebuggerException):
+	def __init__(self, line, name):
+		self.line = line
+		self.name = name
+
+	def __str__(self):
+		Debugger.log_error(f'Function "{self.name}" on line {self.line} doesn\'t exist')
+		return f'{self.name}\nFunction doesn\'t exist on line {self.line}'
