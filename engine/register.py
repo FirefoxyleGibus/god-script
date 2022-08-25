@@ -1,6 +1,3 @@
-from unittest import expectedFailure
-
-
 GSC_TYPES = {
     "UNKNOWN": -1,
     
