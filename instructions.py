@@ -10,7 +10,7 @@ class Instruction:       # general instructions
     def __init__(self, instruction_str, filepos):
         self.filepos = filepos
         self.str     = instruction_str
-    
+
     def parse_params(self, params_str):
         """Parse only raw parameters (only str, int, bool or float)"""
         params = []
@@ -32,7 +32,7 @@ class Instruction:       # general instructions
 class CondInstruction(Instruction):   # parsing conditionnal stuff
     def __init__(self, instruction_str, filepos):
         Instruction.__init__(self, instruction_str, filepos)
-        
+
         self.left, self.right, self.operator = "", "", ""
         for c in self.str:
             if c in "!=<>":
@@ -41,7 +41,7 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
             # get both side of cond
             if len(self.operator) != 2: self.left  += c
             else:                       self.right += c
-    
+
     def _parse_side(self, side_str, registry):
         t = Variable.get_type(side_str)
         if t == GSC_TYPES["STR"]:
@@ -58,9 +58,11 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
         if self.operator == ">=": return l >= r
         return 0
 
-class FuncInstruction:   # all functions in std
-    def __init__(self, instruction_str, filepos):
-        pass
+class FuncInstruction(Instruction):   # all functions in std
+    def __init__(self, instruction_str, filepos, params):
+        self.instr = instructions_str
+		self.filepos = filepos
+		self.params = parse_params(params)
 
 class BranchInstruction: # if / for / while
     def __init__(self, instruction_str, filepos, block_codes):

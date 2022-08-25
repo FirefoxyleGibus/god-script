@@ -109,7 +109,7 @@ class parser:
 		Debugger.begin_section("PARSING")
 		self.instructions = instructions
 		A = self.parseOne(self.instructions)
-		Debugger.log("instr",str(A))
+		Debugger.log("instr :",str(A))
 		Debugger.end_section()
 		return A
 
