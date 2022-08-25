@@ -1,10 +1,10 @@
 # God script use .gsc
 
-from engine import *
+from engine.engine import *
 
 # Entry point
 def main(args):
-    from debugger import Debugger
+    from engine.debugger import Debugger
     import time
 
     # Find filename else raise error

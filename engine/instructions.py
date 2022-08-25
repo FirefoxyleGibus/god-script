@@ -1,5 +1,5 @@
-from define import *
-from register import *
+from engine.define import *
+from engine.register import *
 
 class Filepos:
 	def __init__(self, line, char):

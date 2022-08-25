@@ -1,4 +1,4 @@
-from debugger import *
+from engine.debugger import *
 
 class DebuggerException(Exception):
 	pass

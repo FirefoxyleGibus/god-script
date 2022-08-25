@@ -1,7 +1,7 @@
-from define import *
-from register import *
-from debugger import *
-from errors import *
+from engine.define import *
+from engine.register import *
+from engine.debugger import *
+from engine.errors import *
 
 class tokenizer:
 	code = ""

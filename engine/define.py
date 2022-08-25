@@ -1,4 +1,4 @@
-from errors import *
+from engine.errors import *
 
 def func1(par):
 	if (type(par) == list):
