@@ -4,6 +4,7 @@ from engine import *
 
 # Entry point
 def main(args):
+    from debugger import Debugger
     import time
 
     # Find filename else raise error
@@ -13,6 +14,8 @@ def main(args):
             filename = arg
     if not filename:
         raise SyntaxError("Please specify a filename")
+
+    Debugger.init()
 
     t1 = time.perf_counter()
     T = tokenizer(filename)

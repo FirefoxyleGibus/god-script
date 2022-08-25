@@ -3,16 +3,14 @@ from register import *
 from debugger import *
 from errors import *
 
-_debugger = Debugger()
-
 class tokenizer:
 	code = ""
 	lines = []
 	instructions = []
 
 	def __init__(self,file):
-		_debugger.begin_section("TOKENISER INIT")
-		_debugger.log("Opening ", file)
+		Debugger.begin_section("TOKENISER INIT")
+		Debugger.log("Opening ", file)
 		with open(file,"rb") as f:
 			strFlag = False
 			comFlag = False
@@ -54,7 +52,7 @@ class tokenizer:
 					else:
 						self.code += character
 			self.code = bytes(self.code, "utf-8").decode("unicode_escape")
-		_debugger.log("Read file")
+		Debugger.log("Read file")
 		cur = ""
 		for i in self.code:
 			if (i != ";"):
@@ -62,12 +60,12 @@ class tokenizer:
 			else:
 				self.lines.append(cur)
 				cur = ""
-		_debugger.log("Splitted into instructions")
+		Debugger.log("Splitted into instructions")
 		for i in range(len(self.lines)):
 			self.instructions += self.doOneCut(self.lines[i])
-		_debugger.log("Cutted")
-		_debugger.log("instr :", str(self.instructions))
-		_debugger.end_section()
+		Debugger.log("Cutted")
+		Debugger.log("instr :", str(self.instructions))
+		Debugger.end_section()
 
 	def doOneCut(self,inp):
 		cur = ""
@@ -95,11 +93,11 @@ class tokenizer:
 		return out
 
 	def showCode(self):
-		_debugger.begin_section("TOKENISER OUT")
-		_debugger.log(self.code)
-		_debugger.log(self.lines)
-		_debugger.log(self.instructions)
-		_debugger.end_section()
+		Debugger.begin_section("TOKENISER OUT")
+		Debugger.log(self.code)
+		Debugger.log(self.lines)
+		Debugger.log(self.instructions)
+		Debugger.end_section()
 
 	def sendData(self):
 		return self.instructions
@@ -108,11 +106,11 @@ class parser:
 	instructions = []
 
 	def parse(self,instructions):
-		_debugger.begin_section("PARSING")
+		Debugger.begin_section("PARSING")
 		self.instructions = instructions
 		A = self.parseOne(self.instructions)
-		_debugger.log("instr",str(A))
-		_debugger.end_section()
+		Debugger.log("instr",str(A))
+		Debugger.end_section()
 		return A
 
 	def parseOne(self,inp):
@@ -151,7 +149,7 @@ class interpreter:
 	instructions = []
 
 	def exec(self,instructions):
-		_debugger.begin_section("INTERPRETER")
+		Debugger.begin_section("INTERPRETER")
 		self.register     = Register()
 		self.instructions = instructions
 
@@ -163,22 +161,22 @@ class interpreter:
 				elif (self.instructions[i] == "store"):
 					if (len(self.instructions[i+1]) == 2):
 						if (type(self.instructions[i+1][0]) == str):
-							_debugger.log(f"Storing {self.instructions[i+1][1]} at {self.instructions[i+1][0]}")
+							Debugger.log(f"Storing {self.instructions[i+1][1]} at {self.instructions[i+1][0]}")
 							self.register.store_var(self.instructions[i+1][0], self.instructions[i+1][1])
-							_debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
+							Debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
 							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
-							_debugger.end_section()
+							Debugger.end_section()
 						else:
 							raise InvalidSyntaxError(0,"store","variable can't be numbers")
 
 					elif (type(self.instructions[i+1][1] == str)):
 						A = self.executeInst(self.instructions[i+1][1],self.instructions[i+1][2])
 						if (type(self.instructions[i+1][0]) == str):
-							_debugger.log(f"Storing {A} at {self.instructions[i+1][0]}")
+							Debugger.log(f"Storing {A} at {self.instructions[i+1][0]}")
 							self.register.store_var(self.instructions[i+1][0], A)
-							_debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
+							Debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
 							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
-							_debugger.end_section()
+							Debugger.end_section()
 						else:
 							raise InvalidSyntaxError(0,"store","variable can't be numbers")
 
@@ -186,8 +184,8 @@ class interpreter:
 						raise InvalidSyntaxError(0,"store","store takes 2 parameters")
 				else:
 					raise InvalidSyntaxError(0,"interpreter","func or variables doesn't exists")
-		_debugger.end_section()
-		_debugger.close()
+		Debugger.end_section()
+		Debugger.close()
 
 	def executeInst(self,inst,par):
 		newPar = []
@@ -207,13 +205,13 @@ class interpreter:
 					newPar.append(par[i])
 			else:
 				newPar.append(par[i])
-		_debugger.log_func_call(inst, newPar)
+		Debugger.log_func_call(inst, newPar)
 		return funcDefiner[inst](newPar)
 
 
 	def replaceVar(self, inp, var):
 		"""Replace variable name by variable value"""
-		_debugger.log(f"Replacing {var} in {repr(inp)} by {repr(self.register.get_var(var))}")
+		Debugger.log(f"Replacing {var} in {repr(inp)} by {repr(self.register.get_var(var))}")
 		B = []
 		for i in inp:
 			if (type(i) == list):
