@@ -6,12 +6,19 @@ class FuncInstruction(Instruction):   # all functions in std
 	def __init__(self, instruction_str, params, filepos=Filepos(0, 0)):
 		self.instr = instruction_str
 		self.filepos = filepos
-		self.params = self.parse_params(params)
+		self.params = []
+		for i in params:
+			if (type(i) != FuncInstruction):
+				self.params.append(Variable.parse_to_type(i))
+			else:
+				self.params.append(i)
+		self.strParams = "[" + ",".join([str(p) for p in self.params]) + "]"
 
 	def __str__(self):
-		return f'{self.instr} with {self.params} in {self.filepos}'
+		return f'{self.instr} with {self.strParams} in {self.filepos}'
 
 	def exec(self):
+		Debugger.log_instruction(self,"Trying execution with parameters",self.strParams)
 		if (self.instr not in funcDefiner.keys()):
 			raise MissingFuncError(self.filepos.line,self.instr)
 		else:
@@ -23,19 +30,15 @@ def executeInst(inst):
 	newPar = []
 	for i in range(len(inst.params)):
 		if (type(inst.params[i]) == FuncInstruction):
-			if (inst.params[i] in funcDefiner.keys()):
-				newPar.append(executeInst(inst.params[i]))
-			else:
-				raise MissingFuncError(inst.params[i].filepos.line,inst.params[i].instr)
+			newPar.append(inst.params[i].exec())
 		elif (type(inst.params[i]) == str):
 			if not (inst.params[i][0] == '"'):
 				newPar.append(__register.get_var(inst.params[i]).get_value())
 			else:
-				newPar.append(inst.params[i][i])
+				newPar.append(inst.params[i])
 		else:
-			newPar.append(inst.params[i][i])
-	Debugger.log_func_call(inst, newPar)
-	return funcDefiner[inst.instr](inst.params)
+			newPar.append(inst.params[i])
+	return funcDefiner[inst.instr](newPar)
 
 
 class BranchInstruction: # if / for / while

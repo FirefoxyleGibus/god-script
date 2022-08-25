@@ -22,7 +22,7 @@ def main(args):
     P = parser()
     I = interpreter()
     t2 = time.perf_counter()
-    I.exec(P.parse(T.sendData()))
+    I.exec(T.sendData())
     t3 = time.perf_counter()
 
     print("\n\n=========")

@@ -2,6 +2,7 @@ from engine.define import *
 from engine.register import *
 from engine.debugger import *
 from engine.errors import *
+from engine.instructions import *
 
 __register = Register()
 
@@ -64,14 +65,16 @@ class tokenizer:
 				cur = ""
 		Debugger.log("Splitted into instructions")
 		for i in range(len(self.lines)):
-			self.instructions += self.doOneCut(self.lines[i])
+			self.instructions += self.doOneCut(self.lines[i],i+1)
 		Debugger.log("Cutted")
 		Debugger.log("instr :", str(self.instructions))
 		Debugger.end_section()
 
-	def doOneCut(self,inp):
+	def doOneCut(self,inp,line):
 		cur = ""
 		out = []
+		par = []
+		inst = ""
 		flag = False
 		count = 0
 		for j in inp:
@@ -80,19 +83,23 @@ class tokenizer:
 			elif (j == ")"):
 				count -= 1
 			if (j == "(" and not flag and count == 1):
-				out.append(cur)
+				inst = cur
 				cur = ""
 				flag = True
 			elif (j == ")" and flag and count == 0):
-				out.append(self.doOneCut(cur))
+				par += (self.doOneCut(cur,line))
 				flag = False
 				cur = ""
 			else:
 				cur += j
 		else:
 			if (cur != ""):
-				out.append(cur)
-		return out
+				return cur
+		if (inst != ""):
+			out.append(FuncInstruction(inst,par,Filepos(1,line)))
+			return out
+		else:
+			return par
 
 	def showCode(self):
 		Debugger.begin_section("TOKENISER OUT")
@@ -156,36 +163,7 @@ class interpreter:
 		self.instructions = instructions
 
 		for i in range(len(self.instructions)):
-			if (type(self.instructions[i]) == str):
-				if (self.instructions[i] in funcDefiner.keys()):
-					A = self.executeInst(self.instructions[i],self.instructions[i+1])
-
-				elif (self.instructions[i] == "store"):
-					if (len(self.instructions[i+1]) == 2):
-						if (type(self.instructions[i+1][0]) == str):
-							Debugger.log(f"Storing {self.instructions[i+1][1]} at {self.instructions[i+1][0]}")
-							self.register.store_var(self.instructions[i+1][0], self.instructions[i+1][1])
-							Debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
-							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
-							Debugger.end_section()
-						else:
-							raise InvalidSyntaxError(0,"store","variable can't be numbers")
-
-					elif (type(self.instructions[i+1][1] == str)):
-						A = self.executeInst(self.instructions[i+1][1],self.instructions[i+1][2])
-						if (type(self.instructions[i+1][0]) == str):
-							Debugger.log(f"Storing {A} at {self.instructions[i+1][0]}")
-							self.register.store_var(self.instructions[i+1][0], A)
-							Debugger.begin_section(f"REPLACE {self.instructions[i+1][0]}")
-							self.instructions = self.replaceVar(self.instructions,self.instructions[i+1][0])
-							Debugger.end_section()
-						else:
-							raise InvalidSyntaxError(0,"store","variable can't be numbers")
-
-					else:
-						raise InvalidSyntaxError(0,"store","store takes 2 parameters")
-				else:
-					raise InvalidSyntaxError(0,"interpreter","func or variables doesn't exists")
+			self.instructions[i].exec()
 		Debugger.end_section()
 		Debugger.close()
 

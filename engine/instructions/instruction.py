@@ -5,6 +5,9 @@ class Filepos:
 		self.line = line
 		self.char = char
 
+	def __str__(self):
+		return f'{self.line}:{self.char}'
+
 class Instruction:       # general instructions
 	def __init__(self, instruction_str, filepos=Filepos(0, 0)):
 		self.filepos = filepos
