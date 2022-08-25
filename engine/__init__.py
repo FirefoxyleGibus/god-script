@@ -1,10 +1,12 @@
 from engine.engine import *
 
+def setup():
+    from engine.debugger import Debugger
+    Debugger.init()
+
 # Entry point
 def main(args):
-    from engine.debugger import Debugger
     import time
-
     # Find filename else raise error
     filename = "" # default to test.gsc
     for arg in args:
@@ -13,7 +15,7 @@ def main(args):
     if not filename:
         raise SyntaxError("Please specify a filename")
 
-    Debugger.init()
+    setup()
 
     t1 = time.perf_counter()
     T = tokenizer(filename)
