@@ -1,3 +1,5 @@
+from engine.errors import MissingVariableError 
+
 GSC_TYPES = {
     "UNKNOWN": -1,
     
@@ -80,6 +82,6 @@ class Register:
     
     def get_var(self, name):
         if not name in self.registeredVariables.keys():
-            raise SyntaxError("Unknown variable: "+ str(name))
+            raise MissingVariableError(str(name))
         
         return self.registeredVariables[name].get_value()

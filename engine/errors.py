@@ -21,3 +21,12 @@ class ZeroDivision(DebuggerException):
 	def __str__(self):
 		Debugger.log_error(f'div on {self.line} : {self.msg}')
 		return f'div\nInvalid Syntax on line : {self.line}\n{self.msg}'
+
+class MissingVariableError(DebuggerException):
+	def __init__(self, line, variable_name):
+		self.line = line
+		self.variable_name = variable_name
+	
+	def __str__(self):
+		Debugger.log_error(f'Missing variable "{self.variable_name}" on line {self.line}')
+		return f'{self.variable_name}\nMissing variable on line {self.line}'
