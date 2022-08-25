@@ -55,6 +55,17 @@ class Debugger:
         """
         s = str(sep).join(msg)
         Debugger.file.write(Debugger._indent() + "[ERROR] " + s + "\n")
+    
+    def log_instruction(instruction, *msg, sep=" "):
+        s = instruction.__class__.__name__
+        s += f"[{str(instruction.filepos)}]: " + sep.join([str(p) for p in msg])
+        Debugger.file.write(s)
+
+    def log_instruction_error(instruction, *msg, sep=" "):
+        s = "[ERROR] " + instruction.__class__.__name__
+        s += f"[{str(instruction.filepos)}]: " + sep.join([str(p) for p in msg])
+        Debugger.file.write(s)
+
 
     def log_func_call(funcname, parameters_list):
         """Log the call to the <funcname> with their parameters

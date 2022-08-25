@@ -30,7 +30,7 @@ class Variable:
         if type(value) == str:
             # avoid reconversion
             if value[0] == '"' and value[-1] == '"':
-                return value
+                return GSC_TYPES["STR"]
             # try to convert
             if value == "false"\
             or value == "true": return GSC_TYPES["BOOL"]

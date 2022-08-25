@@ -1,4 +1,5 @@
 from engine.instructions import Instruction, Filepos
+from engine.register import *
 
 class CondInstruction(Instruction):   # parsing conditionnal stuff
 	def __init__(self, instruction_str, filepos=Filepos(0, 0)):
