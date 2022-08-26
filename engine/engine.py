@@ -4,8 +4,6 @@ from engine.debugger import *
 from engine.errors import *
 from engine.instructions import *
 
-__register = Register()
-
 class tokenizer:
 	code = ""
 	lines = []
@@ -159,7 +157,7 @@ class interpreter:
 
 	def exec(self,instructions):
 		Debugger.begin_section("INTERPRETER")
-		self.register     = Register()
+		self.register     = Register.global_init() # create global instance
 		self.instructions = instructions
 
 		for i in range(len(self.instructions)):

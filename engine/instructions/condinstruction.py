@@ -34,19 +34,19 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 			print((left.rstrip().lstrip(), op, right.rstrip().lstrip()))
 			self.parts.append((left, op, right))
 
-	def _parse_side(self, side_str, registry):
+	def _parse_side(self, side_str):
 		t = Variable.get_type(side_str)
 		if t == GSC_TYPES["STR"]:
-			return registry.get_var(side_str.rstrip().lstrip())
+			return Register.global_instance().get_var(side_str.rstrip().lstrip())
 		else:
 			return Variable.parse_to_type(side_str)
 
-	def exec(self, registry):
+	def exec(self):
 		res = False
 		for i, part in enumerate(self.parts):
 			left, op, right = part
-			l = self._parse_side(left,  registry)
-			r = self._parse_side(right, registry)
+			l = self._parse_side(left)
+			r = self._parse_side(right)
 			part_res = 0
 			if op == "==":   part_res = l == r
 			elif op == "!=": part_res = l != r

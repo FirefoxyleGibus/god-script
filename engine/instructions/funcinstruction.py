@@ -21,22 +21,21 @@ class FuncInstruction(Instruction):   # all functions in std
 		return str(self)
 
 	def exec(self):
-		Debugger.log_instruction(self,"Trying execution with parameters",self.strParams)
+		Debugger.log_instruction(self,"Trying execution with parameters", self.strParams)
 		if (self.instr not in funcDefiner.keys()):
-			raise MissingFuncError(self.filepos.line,self.instr)
+			raise MissingFuncError(self.filepos.line, self.instr)
 		else:
 			return executeInst(self)
 
 
 def executeInst(inst):
-	global __register
 	newPar = []
 	for i in range(len(inst.params)):
 		if (type(inst.params[i]) == FuncInstruction):
 			newPar.append(inst.params[i].exec())
 		elif (type(inst.params[i]) == str):
 			if not (inst.params[i][0] == '"'):
-				newPar.append(__register.get_var(inst.params[i]).get_value())
+				newPar.append(Register.global_instance().get_var(inst.params[i]).get_value())
 			else:
 				newPar.append(inst.params[i])
 		else:
