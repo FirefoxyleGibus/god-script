@@ -61,6 +61,9 @@ class tokenizer:
 			else:
 				self.lines.append(cur)
 				cur = ""
+		else:
+			if (cur != ""):
+				raise InvalidSyntaxError(0,"fetch","Missing ; at the end of file")
 		Debugger.log("Splitted into instructions")
 		print(self.lines)
 		for i in range(len(self.lines)):
