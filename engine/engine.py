@@ -69,7 +69,7 @@ class tokenizer:
 		for i in range(len(self.lines)):
 			self.instructions += self.doOneCut(self.lines[i],i+1,0)
 		Debugger.log("Cutted")
-		Debugger.log("instr : [ " + ",".join(str(p) for p in self.instructions) + " ]")
+		Debugger.log("instr : [ " + ", ".join(repr(p) for p in self.instructions) + " ]")
 		Debugger.end_section()
 
 	def doOneCut(self,inp,line,deep):
@@ -123,7 +123,7 @@ class parser:
 		Debugger.begin_section("PARSING")
 		self.instructions = instructions
 		A = self.parseOne(self.instructions)
-		Debugger.log("instr : [ " + ",".join(str(p) for p in self.instructions) + " ]")
+		Debugger.log("instr : [ " + ", ".join(repr(p) for p in self.instructions) + " ]")
 		Debugger.end_section()
 		return A
 

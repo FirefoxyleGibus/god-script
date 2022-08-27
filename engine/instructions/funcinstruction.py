@@ -18,7 +18,7 @@ class FuncInstruction(Instruction):   # all functions in std
 		return f'{self.instr} with {self.strParams} in {self.filepos}'
 
 	def __repr__(self):
-		return str(self)
+		return f'{self.instr} : {self.strParams}'
 
 	def exec(self):
 		Debugger.log_instruction(self,"Trying execution with parameters", self.strParams)
