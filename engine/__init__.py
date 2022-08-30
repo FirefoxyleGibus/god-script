@@ -2,7 +2,9 @@ from engine.engine import *
 
 def setup(debug_mode):
 	from engine.debugger import Debugger
+	from engine.register import Register
 	Debugger.init(debug_mode)
+	Register.global_init()
 
 # Entry point
 def main(args):

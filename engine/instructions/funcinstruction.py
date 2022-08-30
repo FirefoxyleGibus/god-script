@@ -53,8 +53,3 @@ def executeInst(inst):
 			else:
 				newPar.append(inst.params[i])
 		return funcDefiner[inst.instr](newPar)
-
-
-class BranchInstruction: # if / for / while
-	def __init__(self, instruction_str, sub_instructions, filepos=Filepos(0, 0)):
-		pass

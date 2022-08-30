@@ -1,7 +1,7 @@
 import os
 
 class Debugger:
-	def init(debug_mode, indent="\t"):
+	def init(debug_mode=False, indent="\t"):
 		"""Initialize the debugger, must be called before any of its methods.
 
 		Args:

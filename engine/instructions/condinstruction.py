@@ -31,7 +31,6 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 				# get both side of cond
 				if len(op) != 2: left  += c
 				else:            right += c
-			print((left.rstrip().lstrip(), op, right.rstrip().lstrip()))
 			self.parts.append((left, op, right))
 
 	def _parse_side(self, side_str):
@@ -53,7 +52,6 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 			elif op == "<=": part_res = l <= r
 			elif op == ">=": part_res = l >= r
 			else:            part_res = False
-			print(i, part_res)
 
 			if i >= 1:
 				cond_op = self.ops[i - 1]
@@ -62,3 +60,10 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 			else:
 				res = part_res
 		return res
+	
+	def __str__(self):
+		return f'Conditionnal: {self.instr} in {self.filepos}'
+
+	def __repr__(self):
+		return f'IF : {self.instr}'
+		
