@@ -5,7 +5,7 @@ from engine.instructions.instruction       import Filepos
 class IfInstruction(BranchInstruction):
 	def __init__(self, instruction_str, sub_instructions, filepos=Filepos(0,0)):
 		super().__init__(instruction_str, sub_instructions, filepos)
-
+		
 		self.cond = CondInstruction(instruction_str, filepos)
 
 	def __str__(self):

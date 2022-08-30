@@ -1,4 +1,7 @@
-from engine.engine import *
+from tokenize import Token
+from engine.engine    import *
+from engine.tokeniser import *
+from engine.parser    import *
 
 def setup(debug_mode):
 	from engine.debugger import Debugger
@@ -23,9 +26,9 @@ def main(args):
 	setup(debug_mode)
 
 	t1 = time.perf_counter()
-	T = tokenizer(filename)
-	P = parser()
-	I = interpreter()
+	T = Tokeniser(filename)
+	P = Parser()
+	I = Interpreter()
 	t2 = time.perf_counter()
 	I.exec(T.sendData())
 	t3 = time.perf_counter()
