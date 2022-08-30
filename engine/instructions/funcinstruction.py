@@ -21,7 +21,7 @@ class FuncInstruction(Instruction):   # all functions in std
 		return f'{self.instr} : {self.strParams}'
 
 	def exec(self):
-		Debugger.log_instruction(self,"Trying execution with parameters", self.strParams)
+		Debugger.log_instruction(self,"Executing with parameters", self.strParams)
 		if (self.instr not in funcDefiner.keys() and self.instr != "store"):
 			raise MissingFuncError(self.filepos.line, self.instr)
 		else:
