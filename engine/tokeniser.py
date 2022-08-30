@@ -84,6 +84,8 @@ class Tokeniser:
 		branch_type  = ""
 		branch_flag  = False
 		branch_instr = []
+		branch_par   = []
+		branch_cond  = ""
 
 		count = 0
 		for j in inp:
@@ -92,23 +94,21 @@ class Tokeniser:
 				if branch_flag:
 					branch_instr += self._doOneCut(cur, line, deep+1)
 				branch_type = instr
+				branch_cond = par[0]
+				del par[0]
 				instr = ""
 				branch_flag = True
 				continue
 			elif (j == "}"):
 				if branch_type == "if":
-					cond = par[0]
-					del par[0]
-
 					# parse sub instructions
 					binstr = []
-					for b in branch_instr:
+					for i, b in enumerate(branch_instr):
 						if (b != ""):
-							binstr.append(FuncInstruction(b,par,Filepos(line,deep)))
+							binstr.append(FuncInstruction(b, branch_par[i], Filepos(line,deep)))
 					
-					out.append(IfInstruction(cond, binstr, Filepos(line, deep)))
+					out.append(IfInstruction(branch_cond, binstr, Filepos(line, deep)))
 					return out
-					branch_instr = []
 				branch_flag = False
 				continue
 			
@@ -130,6 +130,10 @@ class Tokeniser:
 				cur = ""
 			elif (j == ")" and flag and count == 0):
 				par += (self._doOneCut(cur, line, deep+1))
+				if branch_flag:
+					branch_par.append(par)
+					par = []
+				
 				flag = False
 				cur = ""
 			else:

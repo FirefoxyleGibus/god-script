@@ -3,7 +3,8 @@ from engine.register import *
 
 class CondInstruction(Instruction):   # parsing conditionnal stuff
 	def __init__(self, instruction_str, filepos=Filepos(0, 0)):
-		Instruction.__init__(self, instruction_str, filepos)
+		self.str = instruction_str
+		self.filepos = filepos
 
 		parts    = []
 		self.ops = []
@@ -62,8 +63,8 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 		return res
 	
 	def __str__(self):
-		return f'Conditionnal: {self.instr} in {self.filepos}'
+		return f'{self.str}'
 
 	def __repr__(self):
-		return f'IF : {self.instr}'
+		return f'COND[{self.str}]'
 		
