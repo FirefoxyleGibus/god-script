@@ -66,7 +66,7 @@ class Register:
 		self.registeredVariables = {}
 
 	def store_var(self, name, value):
-		if name in self.registeredVariables:
+		if name in self.registeredVariables.keys():
 			self.set_var(name, value)
 		else:
 			self.decl_var(name, value)
@@ -85,12 +85,12 @@ class Register:
 			raise MissingVariableError(str(name))
 
 		return self.registeredVariables[name].get_value()
-	
+
 	# Static implementation of singleton (but allow for re creating register)
 
 	def global_init():
 		Register.instance = Register()
 		return Register.instance
-	
+
 	def global_instance():
 		return Register.instance

@@ -1,4 +1,5 @@
 from engine.errors import *
+from engine.register import *
 
 def func1(par):
 	if (type(par) == list):
@@ -112,6 +113,7 @@ def func10(par):
 			raise InvalidSyntaxError(0,"toUni","value is not a character")
 	else:
 		raise InvalidSyntaxError(0,"toUni","toUni takes only 1 argument")
+
 
 funcDefiner = {
 	"show":    func1,

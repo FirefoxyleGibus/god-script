@@ -1,4 +1,4 @@
-# CURRENTLY BROKEN, store doesn't work anymore
+# Showcase the variable system 
 
 store(variable1, 10);
 show(variable1);
