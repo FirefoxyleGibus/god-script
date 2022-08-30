@@ -13,6 +13,16 @@ class InvalidSyntaxError(DebuggerException):
 		Debugger.log_error(f'{self.func} on {self.line} : {self.msg}')
 		return f'{self.func}\nInvalid Syntax on line : {self.line}\n{self.msg}'
 
+class InvalidOperatorError(DebuggerException):
+	def __init__(self, line, func, op):
+		self.op = op
+		self.func = func
+		self.line = line
+
+	def __str__(self):
+		Debugger.log_error(f'{self.func} on {self.line} : {self.op} doesn\'t exists')
+		return f'{self.func}\nInvalid Operator on line : {self.line}\n{self.op} doesn\'t exists'
+
 class ZeroDivision(DebuggerException):
 	def __init__(self, line, msg):
 		self.msg = msg

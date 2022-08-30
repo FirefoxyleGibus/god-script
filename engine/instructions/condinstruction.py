@@ -1,4 +1,5 @@
 from engine.instructions.instruction import *
+from engine.errors import *
 from engine.register import *
 
 class CondInstruction(Instruction):   # parsing conditionnal stuff
@@ -52,7 +53,9 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 			elif op == "!=": part_res = l != r
 			elif op == "<=": part_res = l <= r
 			elif op == ">=": part_res = l >= r
-			else:            part_res = False
+			elif op == ">>": part_res = l > r
+			elif op == "<<": part_res = l < r
+			else:            raise InvalidOperatorError(0,"cond",op)
 
 			if i >= 1:
 				cond_op = self.ops[i - 1]
@@ -61,10 +64,9 @@ class CondInstruction(Instruction):   # parsing conditionnal stuff
 			else:
 				res = part_res
 		return res
-	
+
 	def __str__(self):
 		return f'{self.str}'
 
 	def __repr__(self):
 		return f'COND[{self.str}]'
-		
