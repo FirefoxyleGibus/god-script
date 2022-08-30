@@ -55,11 +55,31 @@ class Tokeniser:
 		Debugger.log("Read file")
 		
 		cur = ""
-		for i in self.code:
-			if (i != ";"):
+		branch_lines = []
+		branch_flag  = False
+		for line_i, i in enumerate(self.code):
+			# Branch
+			if (i == "{"):
+				branch_flag = True
+				branch_lines.append(cur)
+				cur = ""
+			elif (i == "}"):
+				if not branch_flag:
+					raise InvalidSyntaxError(line_i, "fetch", "Missing opening bracket.")
+				
+				self.lines.append(branch_lines)
+				branch_lines = []
+				branch_flag  = False
+				cur          = ""
+
+			# end of line (EOL)
+			elif (i != ";"):
 				cur += i
 			else:
-				self.lines.append(cur)
+				if branch_flag:
+					branch_lines.append(cur)
+				else:
+					self.lines.append(cur)
 				cur = ""
 		else:
 			if (cur != ""):
@@ -67,12 +87,31 @@ class Tokeniser:
 		
 		Debugger.log("Splitted into instructions")
 		
-		for i in range(len(self.lines)):
-			self.instructions += self._doOneCut(self.lines[i], i+1, 0)
+		for i, line in enumerate(self.lines):
+			if (type(line) == list):
+				self.instructions += self._doBranchCut(line, i+1, 0)
+			else:
+				self.instructions += self._doOneCut(line, i+1, 0)
 		
 		Debugger.log("Cutted")
 		Debugger.log("instr : [ " + ", ".join(repr(p) for p in self.instructions) + " ]")
 		Debugger.end_section()
+
+	def _doBranchCut(self, instructions, line, deep):
+		branch_exec     = instructions[0].split("(")
+		branch_subinstr = instructions[1:]
+
+		branch_type  = branch_exec[0]
+		branch_cond  = branch_exec[1][:-1]
+
+		# parse sub instructions
+		branch_instr = []
+		for i, instr in enumerate(branch_subinstr):
+			branch_instr += self._doOneCut(instr, line+i, deep)
+		
+		if branch_type == "if":
+			return [IfInstruction(branch_cond, branch_instr, Filepos(line, deep))]
+		return []
 
 	def _doOneCut(self, inp, line, deep):
 		cur = ""
@@ -81,37 +120,8 @@ class Tokeniser:
 		instr = ""
 		flag = False
 
-		branch_type  = ""
-		branch_flag  = False
-		branch_instr = []
-		branch_par   = []
-		branch_cond  = ""
-
 		count = 0
 		for j in inp:
-			# Parsing branches
-			if (j == "{"):
-				if branch_flag:
-					branch_instr += self._doOneCut(cur, line, deep+1)
-				branch_type = instr
-				branch_cond = par[0]
-				del par[0]
-				instr = ""
-				branch_flag = True
-				continue
-			elif (j == "}"):
-				if branch_type == "if":
-					# parse sub instructions
-					binstr = []
-					for i, b in enumerate(branch_instr):
-						if (b != ""):
-							binstr.append(FuncInstruction(b, branch_par[i], Filepos(line,deep)))
-					
-					out.append(IfInstruction(branch_cond, binstr, Filepos(line, deep)))
-					return out
-				branch_flag = False
-				continue
-			
 			# Parsing params
 			if (j == "("):
 				count += 1
@@ -119,10 +129,7 @@ class Tokeniser:
 				count -= 1
 			
 			if (j == "(" and not flag and count == 1):
-				if branch_flag:
-					branch_instr.append(cur)
-				else:
-					instr = cur
+				instr = cur
 				cur = ""
 				flag = True
 			elif (j == "," and flag and count == 1):
@@ -130,10 +137,6 @@ class Tokeniser:
 				cur = ""
 			elif (j == ")" and flag and count == 0):
 				par += (self._doOneCut(cur, line, deep+1))
-				if branch_flag:
-					branch_par.append(par)
-					par = []
-				
 				flag = False
 				cur = ""
 			else:
@@ -141,9 +144,6 @@ class Tokeniser:
 		else:
 			if (cur != ""):
 				return [Variable.parse_to_type(cur)]
-		
-		if len(out) != 0:
-			return out
 
 		# Functions or params
 		if (instr != ""):
