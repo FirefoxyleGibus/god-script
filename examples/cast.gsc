@@ -1,6 +1,6 @@
 # Get a value and shows it with different cast
 
-store(value,toInt(input("Enter a number >>> ")));
+store(value,toInt(input("Enter a digit >>> ")));
 show("String : ",toString(value),"\n"); # String
 show("Int : ",value,"\n"); # Int
 show("Char : ",toChar(value),"\n"); # Character {value}th
