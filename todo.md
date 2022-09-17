@@ -1,10 +1,8 @@
 # TODOLIST
 
-- [x] add comments
-- [x] custom error
-- [ ] hex, oct and bin
-- [ ] null
-- [ ] for loops
-- [ ] while loops
-- [ ] if expression parsing
-- [ ] add true cli support
+- [] rule checking
+  - [x] parenthesis
+  - [~] variables
+  - [x] instructions separated by ;
+- [~] tokeniser
+- [] interpreter
