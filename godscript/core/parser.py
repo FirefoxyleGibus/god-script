@@ -1,5 +1,6 @@
 from ctypes.wintypes import WORD
 import re
+from godscript.core.debugger import Debugger
 from godscript.core.types import ValueType, ReferenceType
 from godscript.errors.core_errors import SyntaxRuleError
 from godscript.lib import Lib
@@ -14,6 +15,7 @@ FUNCTION_CALL_CHECK = f"\s*{WORD_CHECK}\({PARAMS_CHECK}\)\s*"
 
 class Parser:
 	def check_rules(self, content):
+		Debugger.begin_section("Rules check")
 		parenthesis_stack = 0
 		str_flag = 0
 		known_words = Lib.get_list().keys()
@@ -53,7 +55,7 @@ class Parser:
 					if c == "(":
 						raise SyntaxRuleError(c_i, "Function not known: " + repr(word))
 					else:
-						print(f"Warning: {word} not known.")
+						Debugger.log(f"Warning: {word} not known.")
 				word = ""
 
 		if parenthesis_stack != 0:
@@ -61,8 +63,11 @@ class Parser:
 
 		if str_flag:
 			raise SyntaxRuleError(None, "Missing closing string.")
+		
+		Debugger.end_section()
 
 	def split_lines(self, content):
+		Debugger.begin_section("Splitting lines")
 		# line is (line_idx, content, opt_params)
 		lines = []
 
@@ -112,7 +117,8 @@ class Parser:
 		if accumulate != "":
 			raise SyntaxRuleError(starting_pos, f"Missing ; at the end of the instruction : {accumulate}")
 
-		print(lines)
+		Debugger.log("Lines:\n"+"\n".join([str(l) for l in lines]))
+		Debugger.end_section()
 		return lines
 
 	def _parse_params(self, line):
@@ -130,4 +136,5 @@ class Parser:
 				continue
 			params.append(ValueType(param_))
 
+		Debugger.log(f"Parsing params of {line} : func {funcname} with {params}")
 		return (funcname, params)
