@@ -28,7 +28,7 @@ class Parser:
                 parenthesis_stack-=1
                 if parenthesis_stack < 0:
                     raise SyntaxRuleError(c_i, "Missing opening parenthesis before.")
-            
+
             # comment check
             if c == "#":
                 comment = True
@@ -58,7 +58,7 @@ class Parser:
 
         if parenthesis_stack != 0:
             raise SyntaxRuleError(None, "Missing closing parenthesis.")
-        
+
         if str_flag:
             raise SyntaxRuleError(None, "Missing closing string.")
 
@@ -66,8 +66,8 @@ class Parser:
         # line is (line_idx, content, opt_params)
         lines = []
 
-        starting_pos = (0, 0)
-        line_count = 0
+        starting_pos = (1, 0)
+        line_count = 1
         char_pos = 0
         accumulate = ""
         comment = True
@@ -97,7 +97,7 @@ class Parser:
 
             if not c in ";":
                 accumulate += c
-            
+
             # pos
             if c == "\n":
                 comment = False
@@ -114,7 +114,7 @@ class Parser:
 
         print(lines)
         return lines
-    
+
     def _parse_params(self, line):
         funcname = ""
         params   = []
@@ -129,5 +129,5 @@ class Parser:
                 params.append(ReferenceType(param_))
                 continue
             params.append(ValueType(param_))
-        
+
         return (funcname, params)
