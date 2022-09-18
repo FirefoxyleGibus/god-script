@@ -1,3 +1,4 @@
+from os import getcwd, path
 from godscript.core.debugger import Debugger
 from godscript.core.parser import Parser
 from godscript.core.tokeniser import Tokeniser
@@ -9,6 +10,7 @@ from godscript.lib import Lib
 class RunContext:
 	def __init__(self, filename):
 		file_content = ""
+		abspath = path.join(getcwd(), filename);
 
 		with open(filename, "r") as f:
 			file_content = f.read()
@@ -25,5 +27,7 @@ class RunContext:
 		Debugger.begin_section("Tokeniser")
 		self.tokeniser = Tokeniser()
 		tokens = self.tokeniser.tokenise_instructions(lines)
-		Debugger.end_section()
 		print([str(tk) for tk in tokens])
+		self.tokeniser.tokenise_file(filename, abspath, tokens)
+
+		Debugger.end_section()
