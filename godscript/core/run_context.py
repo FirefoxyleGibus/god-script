@@ -6,19 +6,19 @@ from godscript.lib import Lib
 # abstracts to client parser and everything
 # allow to link other godscript file maybe ?
 class RunContext:
-    def __init__(self, filename):
-        file_content = ""
+	def __init__(self, filename):
+		file_content = ""
 
-        with open(filename, "r") as f:
-            file_content = f.read()
+		with open(filename, "r") as f:
+			file_content = f.read()
 
-        Lib.load()
-        
-        self.parser = Parser()
-        self.parser.check_rules(file_content)
-        lines = self.parser.split_lines(file_content)
+		Lib.load()
+		
+		self.parser = Parser()
+		self.parser.check_rules(file_content)
+		lines = self.parser.split_lines(file_content)
 
 
-        self.tokeniser = Tokeniser()
-        tokens = self.tokeniser.tokenise_instructions(lines)
-        print([str(tk) for tk in tokens])
+		self.tokeniser = Tokeniser()
+		tokens = self.tokeniser.tokenise_instructions(lines)
+		print([str(tk) for tk in tokens])

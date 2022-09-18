@@ -1,2 +1,2 @@
 def show(arg):
-    print(arg)
+	print(arg)
