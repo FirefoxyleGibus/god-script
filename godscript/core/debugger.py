@@ -15,10 +15,6 @@ class Debugger:
 		Debugger.current_sections_stack = []
 		Debugger.indent_str = indent
 	
-	def write_tokenised_file(filename : str, tokens : list):
-		with open(f"./__gsccache__/{filename}_tokenised.py", "w") as f:
-			f.write([str(tk) for tk in tokens])
-	
 	def _write_output(output):
 		"""Write to file and to stdout if out is true"""
 		s = Debugger._indent() + output + "\n"
