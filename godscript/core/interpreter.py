@@ -25,13 +25,14 @@ class Interpreter:
         paramsFlag = False
         func = ""
         params = []
+        function = []
         for i in self.instr:
             if not funcFlag:
                 if (i == "f"):
                     funcFlag = True
             else:
                 if (i == "f"):
-                    print(f"interpreted {func} with ["+",".join(params)+"]")
+                    print(f"interpreted {func} with ["+",".join([repr(p) for p in params])+"]")
                     paramsFlag = False
                     func = ""
                     params = []
@@ -41,8 +42,19 @@ class Interpreter:
                 else:
                     params.append(i)
         else:
-            print(f"interpreted {func} with ["+",".join(params)+"]")
+            print(f"interpreted {func} with ["+",".join([repr(p) for p in params])+"]")
+            function.append([func,params])
             paramsFlag = False
             func = ""
+        return function
+
+    def executeInstr(self):
+        A = self.readInstr()
+        for i in A:
+            if (i[0] == "show"):
+                for j in i[1]:
+                    print(j.replace('"',""),end="")
+            else:
+                print("idk man")
             
 
