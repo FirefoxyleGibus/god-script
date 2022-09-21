@@ -7,8 +7,14 @@ class Instruction():
 		# to read it and not have to build it each time we run it
 		self.str = string
 
-	def exec(context):
-		pass
+	def buildInstruction(self):
+		instr = self.str.split(" ")
+		if (instr[0] == "f"):
+			finalInstr = (instr[1],[instr[i] for i in range(2,len(instr))])
+			self.obj = FunctionCall(self.pos,finalInstr)
+
+	def exec(self,context):
+		self.obj.exec(context)
 
 	def __str__(self) -> str:
 		return self.str
